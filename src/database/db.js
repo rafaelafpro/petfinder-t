@@ -1,14 +1,26 @@
-const sqlite3 = require('sqlite3').verbose()
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
-const db = new sqlite3.Database("./src/database/database.db")
+// Use a variável de ambiente para definir o caminho do banco de dados
+const dbPath = process.env.DATABASE_PATH || path.join(__dirname, "database.db");
 
-module.exports = db
+console.log(dbPath);
+
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error("Error opening database", err);
+  } else {
+    console.log("Database connected");
+  }
+});
+
+module.exports = db;
 
 // db.serialize(() => {
 //     db.run(`
 //         CREATE TABLE IF NOT EXISTS places (
 //             id INTEGER PRIMARY KEY AUTOINCREMENT,
-//             image TEXT, 
+//             image TEXT,
 //             name TEXT,
 //             adress TEXT,
 //             adress2 TEXT,
@@ -17,7 +29,6 @@ module.exports = db
 //             items TEXT
 //         );
 //     `)
-
 
 //     db.all(`SELECT * FROM places`, function (err, rows) {
 //         if (err) {
@@ -35,4 +46,4 @@ module.exports = db
 
 //         console.log("Registro deletado com sucesso!")
 //     })
-// }) 
+// })
